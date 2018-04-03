@@ -68,8 +68,7 @@ on early-boot
     write /sys/kernel/boot_adsp/boot 1
     write /sys/kernel/boot_cdsp/boot 1
     write /sys/kernel/boot_slpi/boot 1
-    exec u:r:qti_init_shell:s0 -- /vendor/bin/init.qcom.early_boot.sh
-    exec u:r:qti_init_shell:s0 -- /vendor/bin/init.qti.can.sh
+    setprop ro.alarm_boot false
 
     # for backward compatibility
     chown system system /persist/sensors
@@ -258,6 +257,12 @@ on post-fs-data
     mkdir /data/vendor/wifi/wigig_hostapd 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
+
+    # Setup sensors-related directories and permissions
+    mkdir /persist/sensors 0775
+    chown system system /persist/sensors
+    chown system system /persist/sensors/sensors_settings
+    chmod 664 /persist/sensors/sensors_settings
 
     #create port-bridge log dir
     mkdir /data/vendor/port_bridge 0770 radio radio
@@ -513,17 +518,10 @@ service vendor.dataadpl /system/vendor/bin/adpl
     user radio
     group radio oem_2901 diag usb net_admin
 
-service vendor.sensors /vendor/bin/sscrpcd
-    class core
-    user system
-    group system
-    disabled
-
 service vendor.sensors.qti /vendor/bin/sensors.qti
     class core
     user system
     group system
-    disabled
 
 on property:ro.vendor.use_data_netmgrd=false
     # netmgr not supported on specific target
@@ -682,50 +680,12 @@ service loc_launcher /system/vendor/bin/loc_launcher
     user gps
     group gps
 
-service qcom-sh /vendor/bin/init.qcom.sh
-    class late_start
-    user root
-    oneshot
-
-service vendor-sensor-sh /vendor/bin/init.qcom.sensors.sh
-    class core
-    user root
-    oneshot
-
-service crashdata-sh /vendor/bin/init.qcom.crashdata.sh
-    class late_start
-    user root
-    oneshot
-
-service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
-    class late_start
-    user root
-    group root system wakelock graphics
-    disabled
-    oneshot
-
-service qti-testscripts /system/bin/sh /system/etc/init.qcom.testscripts.sh
-    class late_start
-    user root
-    disabled
-    oneshot
-    seclabel u:r:qti-testscripts:s0
-
-service wifi-sdio-on /vendor/bin/init.qcom.sdio.sh
-    class late_start
-    group wifi inet
-    disabled
-    oneshot
-
-service wifi-crda /vendor/bin/init.crda.sh
-   class late_start
-   user root
-   disabled
-   oneshot
-
 on property:sys.boot_completed=1
-    start qcom-post-boot
-    start qti-testscripts
+	# Let kernel know our image version/variant/crm_version
+    write /sys/devices/soc0/select_image 10
+    write /sys/devices/soc0/image_version "10:${ro.build.id}:${ro.build.version.incremental}"
+    write /sys/devices/soc0/image_variant "${ro.product.name}-${ro.build.type}"
+    write /sys/devices/soc0/image_crm_version "REL"
 
 on property:ro.vendor.ril.mbn_copy_completed=1
     write /data/vendor/radio/copy_complete 1
@@ -774,9 +734,6 @@ service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/m
     user root
     group root
     disabled
-
-on property:vendor.display.lcd_density=*
-    setprop ro.sf.lcd_density ${vendor.display.lcd_density}
 
 service vendor.vppservice /vendor/bin/vppservice
     class main
