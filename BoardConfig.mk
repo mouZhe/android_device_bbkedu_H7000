@@ -46,7 +46,7 @@ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 ifeq ($(ENABLE_VENDOR_IMAGE), true)
     TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery_non-AB_split_variant.fstab
 else
-    TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery_non-AB_non-split_variant.fstab
+    TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/sdm660_64/recovery_non-AB_non-split_variant.fstab
 endif
 
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472

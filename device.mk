@@ -1,6 +1,6 @@
 TARGET_USES_AOSP := true
 
-DEVICE_PACKAGE_OVERLAYS := $(DEVICE_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Default vendor configuration.
 ifeq ($(ENABLE_VENDOR_IMAGE),)
@@ -40,20 +40,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Video codec configuration files
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
-    $(DEVICE_PATH)/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml \
-    $(DEVICE_PATH)/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
-    $(DEVICE_PATH)/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
+    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    $(LOCAL_PATH)/configs/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml \
+    $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
 endif #TARGET_ENABLE_QC_AV_ENHANCEMENTS
 
 # video seccomp policy files
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
-    $(DEVICE_PATH)/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
+    $(LOCAL_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
+    $(LOCAL_PATH)/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 
-PRODUCT_COPY_FILES += $(DEVICE_PATH)/whitelistedapps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/whitelistedapps.xml \
-                      $(DEVICE_PATH)/gamedwhitelist.xml:$(TARGET_COPY_OUT_VENDOR)/etc/gamedwhitelist.xml \
-                      $(DEVICE_PATH)/appboosts.xml:$(TARGET_COPY_OUT_VENDOR)/etc/appboosts.xml
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/whitelistedapps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/whitelistedapps.xml \
+                      $(LOCAL_PATH)/configs/gamedwhitelist.xml:$(TARGET_COPY_OUT_VENDOR)/etc/gamedwhitelist.xml \
+                      $(LOCAL_PATH)/configs/appboosts.xml:$(TARGET_COPY_OUT_VENDOR)/etc/appboosts.xml
 
 
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -119,7 +119,7 @@ ifeq ($(strip $(BOARD_HAVE_QCOM_FM)),true)
 PRODUCT_BOOT_JARS += qcom.fmradio
 endif #BOARD_HAVE_QCOM_FM
 
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 DEVICE_MATRIX_FILE   := device/qcom/common/compatibility_matrix.xml
 
 # Audio configuration file
@@ -129,7 +129,7 @@ PRODUCT_PACKAGES += android.hardware.media.omx@1.0-impl
 
 # Sensor HAL conf file
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf
+    $(LOCAL_PATH)/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf
 
 # WLAN host driver
 ifneq ($(WLAN_CHIPSET),)
@@ -141,7 +141,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
     $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
-
 
 #ANT+ stack
 PRODUCT_PACKAGES += \
@@ -205,13 +204,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # FBE support
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/init.qti.qseecomd.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.qti.qseecomd.sh
+    $(LOCAL_PATH)/init.qti.qseecomd.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.qti.qseecomd.sh
 
 # MIDI feature
 PRODUCT_COPY_FILES += frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml
 
 # MSM IRQ Balancer configuration file for SDM660
-PRODUCT_COPY_FILES += $(DEVICE_PATH)/msm_irqbalance.conf:$(TARGET_COPY_OUT_VENDOR)/etc/msm_irqbalance.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/msm_irqbalance.conf:$(TARGET_COPY_OUT_VENDOR)/etc/msm_irqbalance.conf
 
 # dm-verity configuration
 PRODUCT_SUPPORTS_VERITY := true
