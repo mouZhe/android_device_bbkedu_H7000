@@ -224,7 +224,6 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    init.class_main.sh \
     init.msm.usb.configfs.rc \
     init.qcom.post_boot.sh \
     init.qcom.sensors.sh \
