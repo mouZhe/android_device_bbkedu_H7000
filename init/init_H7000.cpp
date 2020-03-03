@@ -42,6 +42,7 @@
 
 #include "vendor_init.h"
 #include "property_service.h"
+#include "init_H7000.h"
 
 using android::base::GetProperty;
 using android::init::property_set;
@@ -53,6 +54,11 @@ char const *heapgrowthlimit;
 char const *heapsize;
 char const *heapminfree;
 char const *heapmaxfree;
+
+#ifdef TARGET_HAVE_LIBINIT
+__attribute__ ((weak))
+void init_target_properties() {}
+#endif
 
 static void init_alarm_boot_properties()
 {
@@ -115,7 +121,9 @@ void vendor_load_properties()
 {
     init_alarm_boot_properties();
     check_device();
-    init_finger_print_properties();
+#ifdef TARGET_HAVE_LIBINIT
+    init_target_properties();
+#endif
 
     property_set("dalvik.vm.heapstartsize", heapstartsize);
     property_set("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
