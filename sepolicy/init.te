@@ -1,0 +1,2 @@
+#============init=============
+allow init btnvtool_exec:file execute;
