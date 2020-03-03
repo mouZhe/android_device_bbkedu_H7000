@@ -54,28 +54,6 @@ char const *heapsize;
 char const *heapminfree;
 char const *heapmaxfree;
 
-static void init_finger_print_properties()
-{
-    std::ifstream fin;
-    std::string buf;
-
-    std::string product = GetProperty("ro.product.name", "");
-    if (product.find("H7000") == std::string::npos)
-        return;
-
-    fin.open("/proc/cmdline");
-    while (std::getline(fin, buf, ' '))
-        if (buf.find("fpsensor") != std::string::npos)
-            break;
-    fin.close();
-
-    if (buf.find("fpc") != std::string::npos) {
-        property_set("ro.boot.fingerprint", "fpc");
-    } else {
-        property_set("ro.boot.fingerprint", "goodix");
-    }
-}
-
 static void init_alarm_boot_properties()
 {
     char const *boot_reason_file = "/proc/sys/kernel/boot_reason";
