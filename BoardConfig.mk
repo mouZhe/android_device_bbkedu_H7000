@@ -229,7 +229,11 @@ BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP := $(DEVICE_PATH)/vendor.prop
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
+ifeq ($(AB_OTA_UPDATER), true)
+TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_AB.qcom
+else
+TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
+endif
 BOARD_HAS_LARGE_FILESYSTEM := true
 
 # RIL
