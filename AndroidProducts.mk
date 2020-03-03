@@ -1,2 +1,1 @@
-PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/sdm660_64.mk
+
