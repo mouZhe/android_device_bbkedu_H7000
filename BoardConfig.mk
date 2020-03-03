@@ -26,6 +26,8 @@ DEVICE_PATH := device/bbkedu/H7000
 
 BOARD_VENDOR := bbkedu
 
+TARGET_LIBINIT_EXTERNAL_DEFINES_FILE := $(DEVICE_PATH)/init/init_H7000.cpp
+
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
 
