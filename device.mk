@@ -24,6 +24,9 @@
 # Inherit proprietary files
 $(call inherit-product, vendor/bbkedu/H7000/H7000-vendor.mk)
 
+# Inherit properties
+$(call inherit-product, $(LOCAL_PATH)/properties.mk)
+
 # Screen density
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
