@@ -68,6 +68,10 @@ TARGET_KERNEL_SOURCE := kernel/bbkedu/H7000
 TARGET_KERNEL_CONFIG := H7000_defconfig
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 
+# Prebuilt Kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
+
+
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 
