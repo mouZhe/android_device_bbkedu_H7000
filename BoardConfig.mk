@@ -258,8 +258,14 @@ PROTOBUF_SUPPORTED := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
+<<<<<<< HEAD:BoardConfig.mk
 BOARD_SEPOLICY_DIRS += \
     $(DEVICE_PATH)/sepolicy
+=======
+BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
+BOARD_PLAT_PUBLIC_SEPOLICY_DIR += $(COMMON_PATH)/sepolicy/public
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(COMMON_PATH)/sepolicy/private
+>>>>>>> 9b828d9... wayne-common: Add BOARD_PLAT_[PUBLIC|PRIVATE]_SEPOLICY_DIR:BoardConfigCommon.mk
 
 # Treble
 PRODUCT_FULL_TREBLE_OVERRIDE := true
