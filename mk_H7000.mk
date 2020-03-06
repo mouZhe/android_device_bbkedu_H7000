@@ -19,8 +19,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_o_mr1.mk)
 
-# Inherit some common Lineage stuff
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+# Inherit some common MK stuff
+$(call inherit-product, vendor/mk/config/common_full_phone.mk)
 
 # Inherit from wayne device
 $(call inherit-product, $(LOCAL_PATH)/device.mk)
@@ -28,7 +28,7 @@ $(call inherit-product, $(LOCAL_PATH)/device.mk)
 PRODUCT_BRAND := bbkedu
 PRODUCT_DEVICE := H7000
 PRODUCT_MANUFACTURER := bbkedu
-PRODUCT_NAME := lineage_H7000
+PRODUCT_NAME := mk_H7000
 PRODUCT_MODEL := EEBBK S5
 
 PRODUCT_GMS_CLIENTID_BASE := android-bbkedu

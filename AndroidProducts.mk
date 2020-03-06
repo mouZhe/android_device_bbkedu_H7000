@@ -14,4 +14,4 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_H7000.mk
+    $(LOCAL_DIR)/mk_H7000.mk

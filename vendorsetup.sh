@@ -1,2 +1,2 @@
-add_lunch_combo lineage_H7000-userdebug
-add_lunch_combo lineage_H7000-eng
+add_lunch_combo mk_H7000-userdebug
+add_lunch_combo mk_H7000-eng
