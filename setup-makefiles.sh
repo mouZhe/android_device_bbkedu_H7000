@@ -49,7 +49,7 @@ write_footers
 if [ -s "$MY_DIR"/../$DEVICE_SPECIFIED_COMMON/proprietary-files.txt ]; then
     # Reinitialize the helper for device specified common
     INITIAL_COPYRIGHT_YEAR="$DEVICE_BRINGUP_YEAR"
-    setup_vendor "$DEVICE_SPECIFIED_COMMON" "$VENDOR" "$LINEAGE_ROOT" true
+    setup_vendor "$DEVICE_SPECIFIED_COMMON" "$VENDOR" "$MK_ROOT" true
 
     # Copyright headers and guards
     write_headers "$DEVICE_SPECIFIED_COMMON_DEVICE"
@@ -64,7 +64,7 @@ fi
 if [ -s "$MY_DIR"/../$DEVICE/proprietary-files.txt ]; then
     # Reinitialize the helper for device
     INITIAL_COPYRIGHT_YEAR="$DEVICE_BRINGUP_YEAR"
-    setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" false
+    setup_vendor "$DEVICE" "$VENDOR" "$MK_ROOT" false
 
     # Copyright headers and guards
     write_headers
