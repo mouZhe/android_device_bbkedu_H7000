@@ -45,18 +45,18 @@
 using android::base::GetProperty;
 using android::init::property_set;
 
-char const *heapstartsize;
-char const *heapgrowthlimit;
-char const *heapsize;
-char const *heapminfree;
-char const *heapmaxfree;
+static char const *heapstartsize;
+static char const *heapgrowthlimit;
+static char const *heapsize;
+static char const *heapminfree;
+static char const *heapmaxfree;
 
 #ifdef TARGET_HAVE_LIBINIT
 __attribute__ ((weak))
 void init_target_properties() {}
 #endif
 
-void check_device()
+inline void check_device()
 {
     struct sysinfo sys;
 
@@ -79,7 +79,7 @@ void check_device()
     }
 }
 
-void vendor_load_properties()
+inline void vendor_load_properties()
 {
     check_device();
 #ifdef TARGET_HAVE_LIBINIT
