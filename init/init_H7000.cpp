@@ -1,7 +1,6 @@
 /*
    Copyright (c) 2016, The CyanogenMod Project
-   Copyright (c) 2017, The LineageOS Project
-
+   Copyright (c) 2019, The LineageOS Project
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
    met:
@@ -14,7 +13,6 @@
     * Neither the name of The Linux Foundation nor the names of its
       contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
@@ -30,68 +28,31 @@
 
 #include <cstdlib>
 #include <fstream>
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <sys/sysinfo.h>
 #include <unistd.h>
 
-#include <android-base/file.h>
 #include <android-base/properties.h>
-#include <android-base/strings.h>
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
 
 #include "vendor_init.h"
 #include "property_service.h"
-#include "init_H7000.h"
 
 using android::base::GetProperty;
-using android::init::property_set;
-using android::base::ReadFileToString;
-using android::base::Trim;
+using std::string;
 
-char const *heapstartsize;
-char const *heapgrowthlimit;
-char const *heapsize;
-char const *heapminfree;
-char const *heapmaxfree;
+string heapstartsize, heapgrowthlimit, heapsize,
+       heapminfree, heapmaxfree, heaptargetutilization;
 
-#ifdef TARGET_HAVE_LIBINIT
-__attribute__ ((weak))
-void init_target_properties() {}
-#endif
-
-static void init_alarm_boot_properties()
+void property_override(string prop, string value)
 {
-    char const *boot_reason_file = "/proc/sys/kernel/boot_reason";
-    char const *power_off_alarm_file = "/persist/alarm/powerOffAlarmSet";
-    std::string boot_reason;
-    std::string power_off_alarm;
-    std::string reboot_reason = GetProperty("ro.boot.alarmboot", "");
+    auto pi = (prop_info*) __system_property_find(prop.c_str());
 
-    if (ReadFileToString(boot_reason_file, &boot_reason)
-            && ReadFileToString(power_off_alarm_file, &power_off_alarm)) {
-        /*
-         * Setup ro.alarm_boot value to true when it is RTC triggered boot up
-         * For existing PMIC chips, the following mapping applies
-         * for the value of boot_reason:
-         *
-         * 0 -> unknown
-         * 1 -> hard reset
-         * 2 -> sudden momentary power loss (SMPL)
-         * 3 -> real time clock (RTC)
-         * 4 -> DC charger inserted
-         * 5 -> USB charger inserted
-         * 6 -> PON1 pin toggled (for secondary PMICs)
-         * 7 -> CBLPWR_N pin toggled (for external power supply)
-         * 8 -> KPDPWR_N pin toggled (power key pressed)
-         */
-         if ((Trim(boot_reason) == "3" || reboot_reason == "true")
-                 && Trim(power_off_alarm) == "1") {
-             property_set("ro.alarm_boot", "true");
-         } else {
-             property_set("ro.alarm_boot", "false");
-         }
-    }
+    if (pi != nullptr)
+        __system_property_update(pi, value.c_str(), value.size());
+    else
+        __system_property_add(prop.c_str(), prop.size(), value.c_str(), value.size());
 }
 
 void check_device()
@@ -100,35 +61,42 @@ void check_device()
 
     sysinfo(&sys);
 
-    if (sys.totalram > 3072ull * 1024 * 1024) {
-        // from - phone-xxhdpi-4096-dalvik-heap.mk
+    if (sys.totalram > 5072ull * 1024 * 1024) {
+        // from - phone-xhdpi-6144-dalvik-heap.mk
         heapstartsize = "16m";
         heapgrowthlimit = "256m";
         heapsize = "512m";
-        heapminfree = "4m";
-        heapmaxfree = "8m";
-    } else if (sys.totalram > 2048ull * 1024 * 1024) {
-        // from - phone-xxhdpi-3072-dalvik-heap.mk
+        heaptargetutilization = "0.5";
+        heapminfree = "8m";
+        heapmaxfree = "32m";
+    } else if (sys.totalram > 3072ull * 1024 * 1024) {
+        // from - phone-xxhdpi-4096-dalvik-heap.mk
         heapstartsize = "8m";
-        heapgrowthlimit = "288m";
-        heapsize = "768m";
+        heapgrowthlimit = "256m";
+        heapsize = "512m";
+        heaptargetutilization = "0.6";
+        heapminfree = "8m";
+        heapmaxfree = "16m";
+    } else {
+        // from - phone-xhdpi-2048-dalvik-heap.mk
+        heapstartsize = "8m";
+        heapgrowthlimit = "192m";
+        heapsize = "512m";
+        heaptargetutilization = "0.75";
         heapminfree = "512k";
-	heapmaxfree = "8m";
+        heapmaxfree = "8m";
     }
 }
 
 void vendor_load_properties()
 {
-    init_alarm_boot_properties();
     check_device();
-#ifdef TARGET_HAVE_LIBINIT
-    init_target_properties();
-#endif
 
-    property_set("dalvik.vm.heapstartsize", heapstartsize);
-    property_set("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
-    property_set("dalvik.vm.heapsize", heapsize);
-    property_set("dalvik.vm.heaptargetutilization", "0.75");
-    property_set("dalvik.vm.heapminfree", heapminfree);
-    property_set("dalvik.vm.heapmaxfree", heapmaxfree);
+    property_override("dalvik.vm.heapstartsize", heapstartsize);
+    property_override("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
+    property_override("dalvik.vm.heapsize", heapsize);
+    property_override("dalvik.vm.heaptargetutilization", heaptargetutilization);
+    property_override("dalvik.vm.heapminfree", heapminfree);
+    property_override("dalvik.vm.heapmaxfree", heapmaxfree);
 }
+

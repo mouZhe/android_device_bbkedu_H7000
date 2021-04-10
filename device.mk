@@ -85,11 +85,11 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@4.0-impl:32 \
+    android.hardware.audio@4.0-impl \
     android.hardware.audio@2.0-service \
-    android.hardware.audio.effect@4.0-impl:32 \
+    android.hardware.audio.effect@4.0-impl \
     android.hardware.audio.effect@2.0-service \
-    android.hardware.soundtrigger@2.1-impl:32 \
+    android.hardware.soundtrigger@2.1-impl \
     audio.a2dp.default \
     audio_amplifier.sdm660 \
     audio.primary.sdm660 \
@@ -120,9 +120,7 @@ PRODUCT_COPY_FILES += \
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService \
-    antradio_app \
-    com.dsi.ant.antradio_library \
-    libantradio
+    com.dsi.ant.antradio_library
 
 PRODUCT_COPY_FILES += \
     external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
@@ -134,12 +132,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl:32 \
     android.hardware.camera.provider@2.4-service
-
-# Connectivity Engine support (CNE)
-PRODUCT_PACKAGES += \
-    cneapiclient \
-    com.quicinc.cne \
-    services-ext
 
 # Configstore
 PRODUCT_PACKAGES += \
@@ -160,16 +152,18 @@ PRODUCT_PACKAGES += \
     memtrack.sdm660 \
     libdisplayconfig \
     liboverlay \
+    libgenlock \
     libtinyxml \
+    libvulkan \
     libqdMetaData \
     libqdMetaData.system
 
 PRODUCT_PACKAGES += \
-    android.frameworks.displayservice@1.0_32 \
-    android.hardware.graphics.allocator@2.0-impl:64 \
+    android.frameworks.displayservice@1.0 \
+    android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
     android.hardware.graphics.mapper@2.0-impl \
-    android.hardware.graphics.composer@2.1-impl:64 \
+    android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
@@ -178,25 +172,11 @@ PRODUCT_PACKAGES += \
     vendor.display.config@1.1 \
     vendor.display.config@1.1_vendor
 
-# Doze
-PRODUCT_PACKAGES += \
-    BbkeduDoze
-
 # DRM
 PRODUCT_PACKAGES += \
-    android.hardware.drm@1.0-impl:32 \
+    android.hardware.drm@1.0-impl \
     android.hardware.drm@1.0-service \
     android.hardware.drm@1.1-service.clearkey
-
-# FM
-PRODUCT_PACKAGES += \
-    FM2 \
-    libqcomfm_jni \
-    qcom.fmradio \
-    qcom.fmradio.xml
-
-PRODUCT_PACKAGES += \
-    android.hardware.broadcastradio@1.0-impl
 
 # GPS / Location
 PRODUCT_PACKAGES += \
@@ -216,10 +196,17 @@ PRODUCT_COPY_FILES += \
 
 # Healthd
 PRODUCT_PACKAGES += \
+    android.hardware.health@2.1-impl \
     android.hardware.health@2.0-service
 
 # HIDL
+$(call inherit-product, $(LOCAL_PATH)/hidl-hals.mk)
+
 PRODUCT_PACKAGES += \
+    libhidltransport \
+    libhidltransport.vendor \
+    libhwbinder \
+    libhwbinder.vendor \
     android.hidl.base@1.0
 
 # Init
@@ -249,20 +236,17 @@ PRODUCT_COPY_FILES += \
 
 # Keylayout
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/keylayout/sdm660-snd-card_Button_Jack.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/sdm660-snd-card_Button_Jack.kl \
+    $(LOCAL_PATH)/configs/keylayout/gpio-keys.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/gpio-keys.kl \
+
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.bbkedu_H7000
 
-# LiveDisplay native
-PRODUCT_PACKAGES += \
-    vendor.mokee.livedisplay@2.0-service-sdm
-
 # Media
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
+    $(LOCAL_PATH)/configs/media/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml \
+    $(LOCAL_PATH)/configs/media/media_profiles_vendor.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
@@ -298,6 +282,14 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
+# Overlays
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay \
+    $(LOCAL_PATH)/overlay-mokee
+
+# Overlays - Enforce RRO
+PRODUCT_ENFORCE_RRO_TARGETS := *
+
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.1-service-qti
@@ -317,6 +309,23 @@ PRODUCT_COPY_FILES += \
 # QMI
 PRODUCT_PACKAGES += \
     libjson
+
+# Ramdisk Scripts
+PRODUCT_PACKAGES += \
+    init.class_main.sh \
+    init.qcom.post_boot.sh \
+    init.qcom.sensors.sh \
+    init.qcom.sh \
+    init.qcom.usb.sh
+
+# Ramdisk rc
+PRODUCT_PACKAGES += \
+    fstab.qcom \
+    init.msm.usb.configfs.rc \
+    init.qcom.rc \
+    init.qcom.usb.rc \
+    init.target.rc \
+    ueventd.qcom.rc
 
 # RCS
 PRODUCT_PACKAGES += \
@@ -346,6 +355,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     telephony-ext
 
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v29/arm64/arch-arm64-armv8-a/shared/vndk-core/libprotobuf-cpp-full.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libprotobuf-cpp-full-v29.so \
+    prebuilts/vndk/v29/arm64/arch-arm64-armv8-a/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libprotobuf-cpp-lite-v29.so
+
 # Seccomp policy
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
@@ -353,19 +366,20 @@ PRODUCT_COPY_FILES += \
 
 # Sensors
 PRODUCT_PACKAGES += \
-    android.hardware.sensors@1.0-impl:64 \
+    android.hardware.sensors@1.0-impl \
     android.hardware.sensors@1.0-service
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf \
-    $(LOCAL_PATH)/sensors/sensor_def_qcomdev.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/sensor_def_qcomdev.conf
+    $(LOCAL_PATH)/configs/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf \
+    $(LOCAL_PATH)/configs/sensors/android.hardware.sensors@1.0-service.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/android.hardware.sensors@1.0-service.rc
 
-# Tetheroffload
+# Soong
+PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)
+
+# TetherOffload
 PRODUCT_PACKAGES += \
     ipacm \
-    IPACM_cfg.xml \
-    libipanat \
-    liboffloadhal
+    IPACM_cfg.xml
 
 # TextClassifier smart selection model files
 PRODUCT_PACKAGES += \
@@ -381,18 +395,19 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     vendor.mokee.trust@1.0-service
 
-# USB
+# Touchscreen
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
+    libtinyxml2
 
 # Vibrator
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl \
     android.hardware.vibrator@1.0-service
 
-# VNDK-SP:
+# VNDK
 PRODUCT_PACKAGES += \
-    vndk-sp
+    libstdc++.vendor \
+    vndk-ext
 
 # Wifi
 PRODUCT_PACKAGES += \
@@ -405,7 +420,6 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-    $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-    $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
-
+    $(LOCAL_PATH)/configs/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
