@@ -118,14 +118,14 @@ PRODUCT_COPY_FILES += \
     $(TOPDIR)frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
 
 # ANT+
-PRODUCT_PACKAGES += \
-    AntHalService \
-    antradio_app \
-    com.dsi.ant.antradio_library \
-    libantradio
+#PRODUCT_PACKAGES += \
+#    AntHalService \
+#    antradio_app \
+#    com.dsi.ant.antradio_library \
+#    libantradio
 
-PRODUCT_COPY_FILES += \
-    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
+#PRODUCT_COPY_FILES += \
+#    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -179,8 +179,8 @@ PRODUCT_PACKAGES += \
     vendor.display.config@1.1_vendor
 
 # Doze
-PRODUCT_PACKAGES += \
-    BbkeduDoze
+#PRODUCT_PACKAGES += \
+#    BbkeduDoze
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -255,8 +255,8 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.bbkedu_H7000
 
 # LiveDisplay native
-PRODUCT_PACKAGES += \
-    vendor.mokee.livedisplay@2.0-service-sdm
+#PRODUCT_PACKAGES += \
+#    vendor.mokee.livedisplay@2.0-service-sdm
 
 # Media
 PRODUCT_COPY_FILES += \
